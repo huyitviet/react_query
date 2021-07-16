@@ -10,7 +10,7 @@ thuật ngữ về kỹ thuật, nó được dùng tìm nạp dữ liệu, bộ
 
 ## Motivation
 
-Khác với thường lệ, các ứng dụng React không đi với cách  một cách tìm nạp hoặc cập nhật dữ liệu cố định từ các components của bạn các nhà phát triển cuối cùng cân xây dựng nên những cách tìm nạp dữ liệu của riêng họ. Điều này thường có nghĩa là tập hợp các trạng thái của các component-based và sử dụng React hook, hoặc sử dụng nhiều thư viện quản lý các state dùng chung từ store và cung cấp đồng bộ dữ liệu khắp các ứng dụng của họ. 
+Khác với thường lệ, các ứng dụng React không đi với một cách tìm nạp hoặc cập nhật dữ liệu cố định từ các components của bạn, các nhà phát triển cuối cùng cần xây dựng nên những cách tìm nạp dữ liệu của riêng họ. Điều này thường có nghĩa là tập hợp các trạng thái của các component-based và sử dụng React hook, hoặc sử dụng nhiều thư viện quản lý các state dùng chung từ store và cung cấp đồng bộ dữ liệu khắp các ứng dụng của họ. 
 
 Trong khi các thư viện quản lý state truyền thống nhất đang rất tốt cho làm việc với client state, nhưng họ không thực sự tuyệt vời khi xử lý với bất đồng bộ hay server state. Điều này là do server state là hoàn toàn khác nhau. Cho người mới bắt đầu, server state: 
 * Được duy trì điều khiển từ xa vị trí mà bạn không kiểm soát hay sở hữu được
@@ -21,7 +21,7 @@ Trong khi các thư viện quản lý state truyền thống nhất đang rất 
 Một khi bạn nắm được bản chất của server state trong ứng dụng của bạn, nhiều thử thách sẽ phát sinh đến với bạn, ví dụ: 
 * Lưu bộ nhớ tạm (có thể là điều khó khăn nhất trong lập trình)
 * Gộp nhiều yêu cầu cùng dữ liệu trong một yêu cầu
-* Cập nhật dữ lỗi thời trong nền
+* Cập nhật dữ liệu lỗi thời trong nền
 * Nhận biết khi dữ liệu lỗi thời
 * Phản hồi các cập nhật dữ liệu 
 * Thực hiện tối ưu hóa như đánh số trang và tải dữ liệu chậm
@@ -29,7 +29,7 @@ Một khi bạn nắm được bản chất của server state trong ứng dụn
 * Ghi nhớ các kết quả truy vấn với sự chia sẻ cấu trúc  
 Nếu bạn không bị choáng ngợp bởi danh sách, điều đó chắc chắn là bạn đã có khả năng sẵn sàng giải quyết tất cả các vấn đề của server state và xứng đáng với một phần thưởng. Tuy nhiên, nếu bạn giống với phần lớn mọi người, bạn chưa giải quyết được tất cả hoặc một vài thử thách và chỉ chúng tôi làm nổi(only scratching the surface)!.
 
-React Query là một trong nhưng thư viện tốt nhất cho quản lý server state. Nó làm việc tuyệt vời khác với thường lệ, không cần cầu hình, có thể tùy chỉnh giốn như ứng dụng phát triển của bạn.
+React Query là một trong nhưng thư viện tốt nhất cho quản lý server state. Nó làm việc tuyệt vời khác với thường lệ, không cần cầu hình, có thể tùy chỉnh giống như ứng dụng phát triển của bạn.
 
 React Query cho phép bạn đánh bại và dành chiến thắng các rào cản, thử thách phức tạp của server state và điều khiển dữ liệu ứng dụng của bạn trước khi khó bắt đầu với đến bạn.
 
