@@ -6,7 +6,7 @@ import {Meta} from '@storybook/addon-docs';
 # OverView(Tổng quan)
 
 React Query thường được mô tả là thư viện để tìm nạp dữ liệu còn thiếu cho React, trong
-thuật ngữ về kỹ thuật, nó được dùng tìm nạp dữ liệu, bộ nhớ đệm, đồng bộ và cập nhật trạng thái sever trong ứng dụng React của bạn dễ dàng.
+thuật ngữ về kỹ thuật, nó được dùng tìm nạp dữ liệu, bộ nhớ đệm, đồng bộ và cập nhật trạng thái server trong ứng dụng React của bạn dễ dàng.
 
 ## Motivation
 
