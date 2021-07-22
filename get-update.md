@@ -93,7 +93,7 @@ Ngoài ra, hãy chú ý đến cách biến `status` thay đổi. Ban đầu nó
 
 # Mutation(Sự thay đổi)
 
-Sau khi tìm nạp dữ liệu, để thêm mới, cập nhật, xoá dữ liệu chúng ta sử dụng hàm `useMutation`, ví dụ thêm dữ liệu: 
+Sau khi tìm nạp dữ liệu, để thêm mới, cập nhật, xoá dữ liệu chúng ta sử dụng hàm `useMutation()`, ví dụ thêm dữ liệu: 
 
 ``` javascript
 import React from 'react';
@@ -167,121 +167,9 @@ Với React Query việc lưu cache khá đơn giản khi sử dụng `useQuery`
 sau đó khởi tạo hàm query, cú pháp `const query = useQueryClient`
 để thực thi hàm này và lấy dữ liệu từ bộ nhờ tạm ta sử dụng: cú pháp `query.getQueryData(queryKey)` để lấy ra danh sách dữ liệu mong muốn từ cache theo từng queryKey.
 * Cập nhật dữ liệu cho cache: 
-Dư liệu cho bộ nhớ tạm sẽ trở nên lỗi thời nếu chúng ta không cập nhật chúng. 
+Dữ liệu cho bộ nhớ tạm sẽ trở nên lỗi thời nếu chúng ta không cập nhật chúng. 
 
 Để cập nhật ta sử dụng cú pháp: `query.setQueryData(queryKey, newData)`
-
-ví dụ minh hoạ
-``` javascript
-import React, {useState} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-  FlatList,
-  SafeAreaView,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
-import axios from 'axios';
-import {useQuery, useQueryClient} from 'react-query';
-
-const Home = () => {
-  const [friendList, setFriendList] = useState([]);
-  const [friends, setFriends] = useState([]);
-  const query = useQueryClient();
-
-  const {data, isLoading, error} = useQuery('getFriendList', () =>
-    axios
-      .get('https://60b4ef87fe923b0017c83297.mockapi.io/friends')
-      .then(res => res.data),
-  );
-
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-  if (error) {
-    return <Text>{'An error has occurred: ' + error.message}</Text>;
-  }
-  const renderItem = ({item}) => {
-    return (
-      <View>
-        <Image style={{width: 300, height: 300}} source={{uri: item.avatar}} />
-        <Text>{item.name}</Text>
-        <Text>Địa chỉ: {item.address}</Text>
-      </View>
-    );
-  };
-
-  return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.areaView}>
-        <View style={{flex: 1}}>
-          <FlatList
-            data={friendList}
-            keyExtractor={item => item.id}
-            renderItem={renderItem}
-          />
-        </View>
-        <View style={{flex: 1}}>
-          <FlatList
-            data={friends}
-            keyExtractor={item => item.id}
-            renderItem={renderItem}
-          />
-        </View>
-      </SafeAreaView>
-      <View style={{flex: 1}}>
-        <TouchableOpacity
-          style={styles.Touch}
-          onPress={() => setFriendList(data)}>
-          <Text> Save Cache</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.Touch}
-          onPress={() => {
-            let getFriends= query.getQueryData('getFriendList');
-            setFriends(getFriends);
-          }}>
-          <Text> Get Data</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.Touch}
-          onPress={() => {
-            let getFriends = query.getQueryData('getFriendList');
-            getFriends = getFriendsfilter(e => e.name === 'Kris');
-            query.setQueryData('getFriendList', getFriends);
-          }}>
-          <Text> Update Data</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-
-export default Home;
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  areaView: {flex: 1.2, padding: 20, flexDirection: 'row'},
-  Touch: {
-    width: 200,
-    borderWidth: 1,
-    borderRadius: 20,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-```
-
-
-
 
 ## Querying a Single Record (Truy vấn một bản ghi)
 
