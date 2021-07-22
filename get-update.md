@@ -94,7 +94,7 @@ Ngoài ra, hãy chú ý đến cách biến `status` thay đổi. Ban đầu nó
 
 # Mutation(Sự thay đổi)
 
-Sau khi tìm nạp dữ liệu, để thêm mới, cập nhật, xoá dữ liệu chúng ta sử dụng hàm `useMutation`, ví dụ: 
+Sau khi tìm nạp dữ liệu, để thêm mới, cập nhật, xoá dữ liệu chúng ta sử dụng hàm `useMutation`, ví dụ thêm dữ liệu: 
 
 ``` javascript
 import React from 'react';
