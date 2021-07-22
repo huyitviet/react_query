@@ -3,8 +3,7 @@ import {Meta} from '@storybook/addon-docs';
 <Meta title="Guide/React-query" />
 
 # Hướng dẫn sử dụng react-query
-React Query là một trong những công cụ quản lý trạng thái có cách tiếp cận khác với Flux, Redux và Mobx . Nó giới thiệu các khái niệm chính về Trạng thái máy khách và Trạng thái máy chủ. Điều này làm cho React Query trở thành một trong những thư viện tốt nhất để quản lý trạng thái vì tất cả các mẫu quản lý trạng thái khác chỉ giải quyết trạng thái máy khách và khó xử lý trạng thái máy chủ cần được tìm nạp, lắng nghe hoặc đăng ký.
-Ngoài việc xử lý trạng thái máy chủ, nó hoạt động tốt một cách đáng kinh ngạc, với cấu hình bằng 0 và có thể được tùy chỉnh theo ý muốn của bạn khi ứng dụng của bạn phát triển.*
+React Query là một trong những công cụ quản lý trạng thái có cách tiếp cận khác với Flux, Redux và Mobx . Nó giới thiệu các khái niệm chính về Trạng thái Client và Trạng thái Server. Điều này làm cho React Query trở thành một trong những thư viện tốt nhất để quản lý trạng thái. Bạn có thể tùy chỉnh theo ý muốn của bạn khi phát triển ứng dụng của mình.
 
 ## Setting (Cài đặt): 
 React Query có thể được cài đặt trên một dự án trống hoặc hiện có bằng cách sử dụng câu lệnh:
