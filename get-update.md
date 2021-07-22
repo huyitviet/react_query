@@ -242,18 +242,17 @@ const Home = () => {
         <TouchableOpacity
           style={styles.Touch}
           onPress={() => {
-            let newData = query.getQueryData('getFriendList');
-            setFriends(newData);
+            let getFriends= query.getQueryData('getFriendList');
+            setFriends(getFriends);
           }}>
           <Text> Get Data</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.Touch}
           onPress={() => {
-            let a = query.getQueryData('getFriendList');
-            a = a.filter(e => e.name === 'Kris');
-            console.log('aaaaa', a);
-            query.setQueryData('getFriendList', a);
+            let getFriends = query.getQueryData('getFriendList');
+            getFriends = getFriendsfilter(e => e.name === 'Kris');
+            query.setQueryData('getFriendList', getFriends);
           }}>
           <Text> Update Data</Text>
         </TouchableOpacity>
