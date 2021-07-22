@@ -96,7 +96,7 @@ Ngoài ra, hãy chú ý đến cách biến `status` thay đổi. Ban đầu nó
 
 Sau khi tìm nạp dữ liệu, để thêm mới, cập nhật, xoá dữ liệu chúng ta sử dụng hàm `useMutation`, ví dụ: 
 
-``` javascrift
+``` javascript
 import React from 'react';
 import {StyleSheet, Text, View, ActivityIndicator, Button} from 'react-native';
 import {useMutation} from 'react-query';
@@ -173,7 +173,7 @@ Dư liệu cho bộ nhớ tạm sẽ trở nên lỗi thời nếu chúng ta kh�
 Để cập nhật ta sử dụng cú pháp: `query.setQueryData(queryKey, newData)`
 
 ví dụ minh hoạ
-``` javascrift
+``` javascript
 import React, {useState} from 'react';
 import {
   View,
