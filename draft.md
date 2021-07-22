@@ -43,22 +43,11 @@ import { useQuery } from 'react-query';
 import {Text, View, Flatlist} from 'react-native'; 
 import UserTable from "../components/UserTable";
 
-import axios from 'axios';
-
 const BasicQuery = () => {
-// Gọi Api thông thường: 
   const fetchAllUsers = async () =>
-    await (await fetch('http://localhost:3004/users')).json();
-    const { data, error, status } = useQuery('users', fetchAllUsers);
+    await (await fetch("http://localhost:3004/users")).json();
 
-// Dùng axios: 
-const {data, error, status} = useQuery('users', () =>
-   axios
-     .get('http://localhost:3004/users')
-     .then(res => res.data),
- );
-
-  
+  const { data, error, status } = useQuery("users", fetchAllUsers);
 
   return (
     <View>
@@ -91,199 +80,6 @@ Các hook `useQuery` chấp nhận rất nhiều thông số và trả về rấ
 Ví dụ trên nhằm xác định thiết lập tối thiểu cần thiết để thực hiện một yêu cầu  API bằng cách sử dụng thư viện. 
 
 Ngoài ra, hãy chú ý đến cách biến `status` thay đổi. Ban đầu nó được đặt thành `loading`. Sau đó, khi yêu cầu thành công, nó sẽ thay đổi thành `success`, khiến React kết xuất lại thành phần và cập nhật trả ra giao diện người dùng.
-
-# Mutation(Sự thay đổi)
-
-Sau khi tìm nạp dữ liệu, để thêm mới, cập nhật, xoá dữ liệu chúng ta sử dụng hàm `useMutation`, ví dụ: 
-
-``` javascrift
-import React from 'react';
-import {StyleSheet, Text, View, ActivityIndicator, Button} from 'react-native';
-import {useMutation} from 'react-query';
-import axios from 'axios';
-
-const AddData = () => {
-  const request = {
-    name: 'Song Gio',
-    avatar: 'https://cdn.fakercloud.com/avatars/beshur_128.jpg',
-    address: 'Ha Noi',
-  };
-
-  const mutation = useMutation(params =>
-    axios.post('https://60b4ef87fe923b0017c83297.mockapi.io/friends', params),
-  );
-
-  const saveData = () => {
-    mutation.mutate(request);
-  };
-  const loading = () => {
-    return (
-      <View>
-        <ActivityIndicator />
-        <Text>Adding todo...'</Text>
-      </View>
-    );
-  };
-
-  return (
-    <View>
-      <View style={styles.constainer}>
-        {mutation.isLoading ? loading() : null}
-        {mutation.isError
-        ? <Text style={styles.txtError}>ERROR</Text> : null}
-        {mutation.isSuccess ? (
-          <Text style={styles.txtSuccess}>Them thanh cong</Text>
-        ) : null}
-      </View>
-      <Button onPress={() => saveData()} title="luu data" />
-    </View>
-  );
-};
-
-export default AddData;
-
-const styles = StyleSheet.create({
-  constainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  txtError: {
-    color: 'red',
-  },
-  txtSuccess: {
-    color: 'green',
-  },
-});
-```
-*Cụ thể: 
-1. Đầu tiên ta import  useMutation thông qua câu lệnh `import {useMutation} from 'react-query';`
-2. Tiếp theo, ở ví dụ này ta khai báo một function để thêm dữ liệu vào máy chủ  - `mutation`  sử dụng `useMutation` - với tham số truyền vào là 'params'. 
-3. Hàm `saveData` là hàm thực thi hàm mutation,  với cú pháp `mutation.mutate()`. Hàm này nhận body là request sau đó gọi API để thêm vào dữ liệu cho máy chủ.
-
-Bên cạnh việc thêm dữ liệu `useMutation` ta có thể sử dụng hàm này để thay đổi, xoá dữ liệu như xử lý API thông thường.
-
-# Caching(Bộ nhớ tạm)
-Với React Query việc lưu cache khá đơn giản khi sử dụng `useQuery` hệ thống đã tự lưu vào cache cho bạn.
-* Để lấy được dữ liệu từ bộ nhớ tạm đã lưu ta sử dụng useQueryClient, trước khi sử dụng cần import với cú pháp `import { useQueryClient} from 'react-query';`
-sau đó khởi tạo hàm query, cú pháp `const query = useQueryClient`
-để thực thi hàm này và lấy dữ liệu từ bộ nhờ tạm ta sử dụng: cú pháp `query.getQueryData(queryKey)` để lấy ra danh sách dữ liệu mong muốn từ cache theo từng queryKey.
-* Cập nhật dữ liệu cho cache: 
-Dư liệu cho bộ nhớ tạm sẽ trở nên lỗi thời nếu chúng ta không cập nhật chúng. 
-
-Để cập nhật ta sử dụng cú pháp: `query.setQueryData(queryKey, newData)`
-
-ví dụ minh hoạ
-``` javascrift
-import React, {useState} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  Image,
-  FlatList,
-  SafeAreaView,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
-import axios from 'axios';
-import {useQuery, useQueryClient} from 'react-query';
-
-const Home = () => {
-  const [friendList, setFriendList] = useState([]);
-  const [friends, setFriends] = useState([]);
-  const query = useQueryClient();
-
-  const {data, isLoading, error} = useQuery('getFriendList', () =>
-    axios
-      .get('https://60b4ef87fe923b0017c83297.mockapi.io/friends')
-      .then(res => res.data),
-  );
-
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
-  if (error) {
-    return <Text>{'An error has occurred: ' + error.message}</Text>;
-  }
-  const renderItem = ({item}) => {
-    return (
-      <View>
-        <Image style={{width: 300, height: 300}} source={{uri: item.avatar}} />
-        <Text>{item.name}</Text>
-        <Text>Địa chỉ: {item.address}</Text>
-      </View>
-    );
-  };
-
-  return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.areaView}>
-        <View style={{flex: 1}}>
-          <FlatList
-            data={friendList}
-            keyExtractor={item => item.id}
-            renderItem={renderItem}
-          />
-        </View>
-        <View style={{flex: 1}}>
-          <FlatList
-            data={friends}
-            keyExtractor={item => item.id}
-            renderItem={renderItem}
-          />
-        </View>
-      </SafeAreaView>
-      <View style={{flex: 1}}>
-        <TouchableOpacity
-          style={styles.Touch}
-          onPress={() => setFriendList(data)}>
-          <Text> Save Cache</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.Touch}
-          onPress={() => {
-            let newData = query.getQueryData('getFriendList');
-            setFriends(newData);
-          }}>
-          <Text> Get Data</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.Touch}
-          onPress={() => {
-            let a = query.getQueryData('getFriendList');
-            a = a.filter(e => e.name === 'Kris');
-            console.log('aaaaa', a);
-            query.setQueryData('getFriendList', a);
-          }}>
-          <Text> Update Data</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-};
-
-export default Home;
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  areaView: {flex: 1.2, padding: 20, flexDirection: 'row'},
-  Touch: {
-    width: 200,
-    borderWidth: 1,
-    borderRadius: 20,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-```
-
-
-
 
 ## Querying a Single Record (Truy vấn một bản ghi)
 
@@ -322,7 +118,49 @@ const fetchUser = async ({ queryKey }) => {
   return response.json();
 };
 ```
+## Devtools
+Debugging React Query code có thể sử dụng [Devtools](https://react-query.tanstack.com/devtools) .
+Đây là một tiện ích trực quan hóa hoạt động bên trong của React Query trong thời gian thực khi mã ứng dụng của bạn thực thi. Thiết lập như sau: 
+``` javascript 
+import { ReactQueryDevtools } from "react-query/devtools";
 
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      {/* The rest of your application */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
+```
+Khi bạn chạy ứng dụng của mình, sẽ có một biểu tượng ở góc dưới cùng bên trái mà bạn có thể nhấp vào để mở rộng bảng Devtools.
+
+![Devtools](https://uploads.sitepoint.com/wp-content/uploads/2021/04/161981199003-devtools-panel.png)
+
+Như bạn có thể thấy trong ảnh chụp màn hình ở trên, có một số thuộc tính bạn có thể quan sát để giúp bạn gỡ lỗi ứng dụng của mình. Trong phần tiếp theo, chúng ta sẽ xem xét một số tùy chọn cấu hình để giúp bạn hiểu về một số thuộc tính và hành động này.
+
+## Configuration (Cấu hình)
+
+Triển khai React Query, khi một trang được tải lần đầu tiền, thư viện sẽ tìm nạp dữ liệu vào API, hiển thị nó cho bạn và sau đó lưu vào bộ nhớ cache. Bạn sẽ thấy thông báo "đang tải" khi điều này xảy ra.
+Bộ nhớ đệm cho phép ứng dụng giao diện người dùng của bạn trở nên linh hoạt, đặc biệt nếu bạn có máy chủ API chậm. Tuy nhiên, nó có thể đưa ra một tình huống mà người dùng có thể nhận những dữ liệu đã lỗi thời. Trong React Query đây được gọi là dữ liệu cũ.
+
+Có một số tùy chọn cấu hình có thể giúp bạn tối ưu hóa ứng dụng về hiệu suất độ tin cậy: 
+* **cacheTime**: mặc định là 5 phút hoặc 300000 ms
+* **staleTime**: mặc định là 0 ms.
+
+`cacheTime` xác định thời gian dữ liệu có thể được lưu trữ trong bộ nhớ cache trước khi nó được xóa.`staleTime` xác định mất bao lâu để dữ liệu trở nên lỗi thời. Khi dữ liệu trở nên cũ, nó được đánh dấu để tìm nạp lại. Điều xảy ra vào lần tiếp theo người dùng truy cập lại trang hoặc tập trung lại cửa sổ /tab của app, trình duyệt.
+
+Việc tăng `staleTime`  giá trị có thể làm tăng hiệu suất ứng dụng nếu bạn biết rằng dữ liệu đang được tìm nạp có xác suất được cập nhật thấp. Bạn có thể xác định các cài đặt này bằng cách chuyển đối số thứ ba vào `useQuery` hook:            
+``` javascript 
+const Todos = () => {
+
+   const result = useQuery('todos', () => fetch('/todos'), {
+     staleTime: 60 * 1000 // 1 minute
+     cacheTime: 60 * 1000 * 10 // 10 minutes
+   })
+
+ }
+```
 
 ## Paginated Queries (Truy vấn phân trang)
 Trong ví dụ Truy vấn cơ bản, tất cả 250 bản ghi được tải cùng một lúc. Một cách tiếp cận thân thiện hơn với người dùng là phân trang dữ liệu. Chúng ta có thể đạt được điều này bằng cách sử dụng `useQuery` hook. Trong các phiên bản trước của React Query, điều này được thực hiện bằng cách sử dụng `usePaginateQuery` hook, không còn có sẵn trong React Query 3.
@@ -355,7 +193,7 @@ Ví dụ này khá giống với Truy vấn cơ bản mà chúng ta đã xem tr�
 2. Các `useQuery` khá khác nhau: 
 * Tham số đầu tiên là một mảng `["paginatedUsers", page]`. Điều này là để theo dõi dữ liệu từng trang riêng biệt.
 * Tham số thứ hai là một hàm ẩn danh. Nó được định nghĩa theo cách này để truyền `page` đối số cho hàm `fetchUsers` .
-* Đối số thứ ba là một cấu hình đối tượng nơi chúng ta có thể chuyển nhiều cài đặt. Trong trường hợp này, việc đặt thuộc  tính `keepPreviousData` thành true sẽ thông báo cho React Query lưu vào bộ đệm dữ liệu đã tìm nạp trước đó. Theo mặc định, cài đặt này là false, làm mới các trang đã xem trước đó.
+* Đối số thứ ba là một cấu hình đối tượng nơi chúng ta có thể chuyển nhiều cài đặt. Trong trường hợp này, việc đặt thuộc `keepPreviousData` tính thành true sẽ thông báo cho React Query lưu vào bộ đệm dữ liệu đã tìm nạp trước đó. Theo mặc định, cài đặt này là false, làm mới các trang đã xem trước đó.
 
 Để cải thiện hơn nữa hiệu suất điều hướng trang, bạn có thể tìm nạp trước trang tiếp theo trước khi người dùng điều hướng đến trang đó. Đây là một ví dụ:
 ``` javascript 
@@ -375,4 +213,3 @@ function Example() {
   }, [data, page, queryClient]);
 }
 ```
-
